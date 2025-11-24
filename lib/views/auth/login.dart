@@ -1,3 +1,4 @@
+import 'package:app_pawpal/config.dart';
 import 'package:app_pawpal/models/user.dart';
 import 'package:app_pawpal/views/home/sc_home.dart';
 import 'package:app_pawpal/widgets/auth_listtile.dart';
@@ -14,8 +15,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  late double scHeight;
-  late double scWidth;
+  late double maxHeight;
+  late double maxWidth;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -30,12 +31,12 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    scHeight = MediaQuery.of(context).size.height;
-    scWidth = MediaQuery.of(context).size.width;
+    maxHeight = MediaQuery.of(context).size.height;
+    maxWidth = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          scWidth * 0.05, 0, scWidth * 0.05, scHeight * 0.02),
+          maxWidth * 0.05, 0, maxWidth * 0.05, maxHeight * 0.02),
       child: Column(
         children: [
           // Email Field
@@ -70,6 +71,7 @@ class _LoginViewState extends State<LoginView> {
           // Remember Me
           Row(
             children: [
+              const SizedBox(width: 5),
               const Text("Remember Me",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               Checkbox(
@@ -85,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
 
           // Login Button
           SizedBox(
-            width: scWidth * 0.45,
+            width: maxWidth * 0.45,
             child: ElevatedButton(
               onPressed: _loginValidation,
               child: const Text(
@@ -179,6 +181,7 @@ class _LoginViewState extends State<LoginView> {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
+    // Empty Field Validation
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -188,6 +191,21 @@ class _LoginViewState extends State<LoginView> {
       ));
       return;
     }
+
+    // Email Validation
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$');
+    if (emailRegex.hasMatch(email) == false) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter a valid email address'),
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 2000),
+      ));
+      return;
+    }
+
+    // Password Validation
     if (password.length < 6 || password.length > 20) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -226,7 +244,7 @@ class _LoginViewState extends State<LoginView> {
     );
 
     await http.post(
-      Uri.parse('http://10.19.36.2//app_pawpal/api/login.php'),
+      Uri.parse('${Config.baseUrl}//app_pawpal/api/login.php'),
       body: {
         'email': email,
         'password': password,
@@ -273,13 +291,12 @@ class _LoginViewState extends State<LoginView> {
         setState(() {
           isLoading = false;
         });
-        SnackBar snackBar = const SnackBar(
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Request timed out. Please try again.'),
           backgroundColor: Colors.red,
           duration: Duration(milliseconds: 1500),
-        );
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ));
       },
     );
 

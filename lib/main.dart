@@ -31,9 +31,7 @@ class MainApp extends StatelessWidget {
             bodyLarge: TextStyle(color: Color(0xFF4A321F)),
             bodyMedium: TextStyle(color: Color(0xFF5C4633)),
             titleLarge: TextStyle(color: Color(0xFF4A321F)),
-            titleMedium: TextStyle(
-              color: Color(0xFF5C4633),
-            ),
+            titleMedium: TextStyle(color: Color(0xFF5C4633)),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(

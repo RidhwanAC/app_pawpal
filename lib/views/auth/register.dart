@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_pawpal/config.dart';
 import 'package:app_pawpal/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_pawpal/views/home/sc_home.dart';
@@ -13,8 +14,8 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  late double scHeight;
-  late double scWidth;
+  late double maxHeight;
+  late double maxWidth;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -26,12 +27,12 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    scHeight = MediaQuery.of(context).size.height;
-    scWidth = MediaQuery.of(context).size.width;
+    maxHeight = MediaQuery.of(context).size.height;
+    maxWidth = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          scWidth * 0.05, 0, scWidth * 0.05, scHeight * 0.02),
+          maxWidth * 0.05, 0, maxWidth * 0.05, maxHeight * 0.02),
       child: Column(
         children: [
           // Name Field
@@ -106,7 +107,7 @@ class _RegisterViewState extends State<RegisterView> {
 
           // Register Button
           SizedBox(
-            width: scWidth * 0.45,
+            width: maxWidth * 0.45,
             child: ElevatedButton(
               onPressed: _registerDialog,
               child: const Text(
@@ -130,11 +131,13 @@ class _RegisterViewState extends State<RegisterView> {
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
+    // Empty Field Validation
     if (name.isEmpty ||
         email.isEmpty ||
         phone.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please fill in all fields'),
         backgroundColor: Colors.red,
@@ -142,6 +145,21 @@ class _RegisterViewState extends State<RegisterView> {
       ));
       return;
     }
+
+    // Email Validation
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$');
+    if (emailRegex.hasMatch(email) == false) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please enter a valid email address'),
+        backgroundColor: Colors.red,
+        duration: Duration(milliseconds: 2000),
+      ));
+      return;
+    }
+
+    // Password Validation
     if (password.length < 6 || password.length > 20) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -151,7 +169,10 @@ class _RegisterViewState extends State<RegisterView> {
       ));
       return;
     }
+
+    // Passwords Match Validation
     if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Passwords do not match'),
         backgroundColor: Colors.red,
@@ -194,7 +215,8 @@ class _RegisterViewState extends State<RegisterView> {
             children: [
               CircularProgressIndicator(),
               SizedBox(width: 20),
-              Text('Registering...'),
+              Text('Registering...',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
         );
@@ -202,59 +224,63 @@ class _RegisterViewState extends State<RegisterView> {
       barrierDismissible: false,
     );
     await http.post(
-      Uri.parse('http://10.19.36.2/app_pawpal/api/register.php'),
+      Uri.parse('${Config.baseUrl}/app_pawpal/api/register.php'),
       body: {
         'name': name,
         'email': email,
         'password': password,
         'phone': phone,
       },
-    ).then((response) {
+    ).then((response) async {
       if (response.statusCode == 200) {
         var jsonResponse = response.body;
         var resarray = jsonDecode(jsonResponse);
+        await Future.delayed(const Duration(milliseconds: 1000), () {});
         if (resarray['status'] == 'success') {
           User user = User.fromJson(resarray['data'][0]);
           if (!mounted) return;
-          SnackBar snackBar = const SnackBar(
-            content: Text('Registration successful'),
-          );
-          if (isLoading) {
-            if (!mounted) return;
-            Navigator.pop(context);
-            setState(() {
-              isLoading = false;
-            });
-          }
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomeScreen(
-                      user: user,
-                    )),
-          );
-        } else {
-          if (!mounted) return;
-          SnackBar snackBar = SnackBar(content: Text(resarray['message']));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          setState(() {
+            isLoading = false;
+          });
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Registration successful'),
+            backgroundColor: Colors.green,
+            duration: Duration(milliseconds: 1500),
+          ));
         }
-      } else {
-        if (!mounted) return;
-        SnackBar snackBar = const SnackBar(
-          content: Text('Registration failed. Please try again.'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (isLoading) {
+          if (!mounted) return;
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(resarray['message']),
+            backgroundColor: Colors.red,
+            duration: const Duration(milliseconds: 1500),
+          ));
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }).timeout(
       const Duration(seconds: 10),
       onTimeout: () {
         if (!mounted) return;
-        SnackBar snackBar = const SnackBar(
+        Navigator.pop(context);
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Request timed out. Please try again.'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          backgroundColor: Colors.red,
+          duration: Duration(milliseconds: 1500),
+        ));
       },
     );
 

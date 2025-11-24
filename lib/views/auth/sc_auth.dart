@@ -25,139 +25,204 @@ class _AuthScreenState extends State<AuthScreen> {
       body: SafeArea(
         bottom: false,
         child: Stack(
+          alignment: Alignment.center,
           children: [
-            // Title
             Positioned(
-              width: scWidth,
-              height: scHeight * 0.15,
-              child: const Center(
-                child: Text(
-                  "PawPal",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 5,
-                  ),
-                ),
-              ),
-            ),
-            // Cat Image
-            Positioned(
-              top: scHeight * 0.1,
-              left: scWidth * 0.05,
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.transparent),
-                height: scHeight * 0.15,
-                width: scWidth * 0.3,
-                clipBehavior: Clip.hardEdge,
-                child: Image.asset(
-                  'assets/images/cat.png',
-                  scale: 6,
-                  fit: BoxFit.none,
-                  alignment: const Alignment(-0.1, -1.8),
-                ),
-              ),
-            ),
-            // Rabbit Image
-            Positioned(
-              top: scHeight * 0.1,
-              left: scWidth * 0.35,
-              height: scHeight * 0.15,
-              width: scWidth * 0.3,
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.transparent),
-                clipBehavior: Clip.hardEdge,
-                child: Image.asset(
-                  'assets/images/rabbit.png',
-                  scale: 6,
-                  fit: BoxFit.none,
-                  alignment: const Alignment(-0.1, -1.4),
-                ),
-              ),
-            ),
-            // Dog Image
-            Positioned(
-              top: scHeight * 0.1,
-              left: scWidth * 0.65,
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.transparent),
-                height: scHeight * 0.15,
-                width: scWidth * 0.3,
-                clipBehavior: Clip.hardEdge,
-                child: Image.asset(
-                  'assets/images/dog.png',
-                  scale: 5,
-                  fit: BoxFit.none,
-                  alignment: const Alignment(-0.1, -1.5),
-                ),
-              ),
-            ),
-            // Center White Container with Login/Register Forms
-            Positioned(
-                top: scHeight * 0.25,
-                left: scWidth * 0.1,
-                child: Container(
-                  width: scWidth * 0.8,
-                  height: scHeight * 0.55,
-                  decoration: BoxDecoration(
-                      border:
-                          Border.all(color: const Color(0xFF8B5E3B), width: 3),
-                      borderRadius: BorderRadius.zero),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(scHeight * 0.01),
-                            child: TextButton(
-                              onPressed: navigatePage(0),
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontWeight: _currentIndex == 0
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 16,
-                                ),
+                child: Center(
+              child: Column(
+                children: [
+                  // Title
+                  SizedBox(
+                    height: scHeight * 0.1,
+                    width: scWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          children: [
+                            // Stroked text as border.
+                            Text(
+                              'PawPal',
+                              style: TextStyle(
+                                fontSize: scHeight * 0.05,
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 5
+                                  ..color = const Color(0xFF8B5E3B),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(scHeight * 0.01),
-                            child: TextButton(
-                              onPressed: navigatePage(1),
-                              child: Text(
-                                "Register",
-                                style: TextStyle(
-                                  fontWeight: _currentIndex == 1
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 16,
-                                ),
+                            // Solid text as fill.
+                            Text(
+                              'PawPal',
+                              style: TextStyle(
+                                fontSize: scHeight * 0.05,
+                                color: Colors.white,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: PageView(
-                          physics: const NeverScrollableScrollPhysics(),
-                          controller: _pageViewController,
-                          onPageChanged: (index) {
-                            setState(() {
-                              _currentIndex = index;
-                            });
-                          },
-                          children: const <Widget>[
-                            LoginView(),
-                            RegisterView(),
                           ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          height: scHeight * 0.1,
+                          width: scHeight * 0.1,
+                          child: Image.asset(
+                            'assets/images/paw.png',
+                            scale: 14,
+                            fit: BoxFit.none,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )),
+
+                  // Images
+                  SizedBox(
+                    height: scHeight * 0.15,
+                    width: scWidth * 0.9,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: scHeight * 0.3,
+                          width: scWidth * 0.3,
+                          child: Image.asset(
+                            'assets/images/cat.png',
+                            scale: 6,
+                            fit: BoxFit.none,
+                            alignment: const Alignment(-0.1, -1.8),
+                          ),
+                        ),
+                        SizedBox(
+                          height: scHeight * 0.3,
+                          width: scWidth * 0.3,
+                          child: Image.asset(
+                            'assets/images/rabbit.png',
+                            scale: 6,
+                            fit: BoxFit.none,
+                            alignment: const Alignment(-0.1, -1.4),
+                          ),
+                        ),
+                        SizedBox(
+                          height: scHeight * 0.3,
+                          width: scWidth * 0.3,
+                          child: Image.asset(
+                            'assets/images/dog.png',
+                            scale: 5,
+                            fit: BoxFit.none,
+                            alignment: const Alignment(-0.1, -1.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Container
+                  Container(
+                    width: scWidth * 0.78,
+                    height: scHeight * 0.55,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color(0xFF8B5E3B), width: 3),
+                        borderRadius: BorderRadius.zero),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(scHeight * 0.01),
+                              child: TextButton(
+                                onPressed: navigatePage(0),
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    fontWeight: _currentIndex == 0
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(scHeight * 0.01),
+                              child: TextButton(
+                                onPressed: navigatePage(1),
+                                child: Text(
+                                  "Register",
+                                  style: TextStyle(
+                                    fontWeight: _currentIndex == 1
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: PageView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            controller: _pageViewController,
+                            onPageChanged: (index) {
+                              setState(() {
+                                _currentIndex = index;
+                              });
+                            },
+                            children: const <Widget>[
+                              LoginView(),
+                              RegisterView(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
+
+            // Cat House
+            Positioned(
+              bottom: 0,
+              left: 0,
+              height: scHeight * 0.4,
+              width: scWidth * 0.3,
+              // ignore: sized_box_for_whitespace
+              child: Image.asset(
+                'assets/images/cathouse.png',
+                scale: 4,
+                fit: BoxFit.none,
+                alignment: const Alignment(0.2, -1),
+              ),
+            ),
+
+            // Ball
+            Positioned(
+              bottom: scHeight * 0.1,
+              right: 0,
+              height: scHeight * 0.15,
+              width: scWidth * 0.3,
+              child: Image.asset(
+                'assets/images/ball.png',
+                scale: 12,
+                fit: BoxFit.none,
+                alignment: const Alignment(1, 1.5),
+              ),
+            ),
+
+            // Door Mat
+            Positioned(
+                bottom: 0,
+                height: scHeight * 0.1,
+                width: scWidth * 0.6,
+                child: Image.asset(
+                  'assets/images/doormat.png',
+                  scale: 5,
+                  fit: BoxFit.none,
+                  alignment: const Alignment(0, 0),
+                ))
           ],
         ),
       ),
