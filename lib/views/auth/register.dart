@@ -210,14 +210,22 @@ class _RegisterViewState extends State<RegisterView> {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          content: Row(
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text('Registering...',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ],
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) {
+            if (didPop) {
+              return;
+            }
+          },
+          child: const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text('Registering...',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
         );
       },

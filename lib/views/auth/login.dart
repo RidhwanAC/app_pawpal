@@ -226,16 +226,24 @@ class _LoginViewState extends State<LoginView> {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          content: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(width: 20),
-                Text('Logging in...',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) {
+            if (didPop) {
+              return;
+            }
+          },
+          child: const AlertDialog(
+            content: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 20),
+                  Text('Logging in...',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
           ),
         );

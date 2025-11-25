@@ -22,8 +22,8 @@ class _AuthScreenState extends State<AuthScreen> {
     scWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        bottom: false,
         child: Stack(
           alignment: Alignment.center,
           children: [
