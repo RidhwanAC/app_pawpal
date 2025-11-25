@@ -38,27 +38,22 @@ PawPal is a Flutter-based mobile application as a platform for pet adoption and 
 
 6. **Additional Features**
    - The app only allows for portrait views of the app.
-   - Mobile devices' "back/return" button is disabled during some navigation process.
+   - Mobile devices' "back/return" button is disabled on some navigation operations.
 
 ## Widgets Used
 
-| Widget Name                 | Purpose                                                                          |
-| --------------------------- | -------------------------------------------------------------------------------- |
-| `Text`                      | Displays labels, messages, and text content                                      |
-| `TextField`                 | Input field for searching places                                                 |
-| `ElevatedButton`            | Button to close the detail screen                                                |
-| `IconButton`                | Refresh button to reload places                                                  |
-| `Row` / `Column`            | Layout structure for arranging widgets horizontally and vertically               |
-| `Container`                 | Decorates UI elements and provides padding/margin                                |
-| `SizedBox`                  | Adds spacing between widgets and sets height/width for certain widgets           |
-| `ImageNetwork`              | Loads images from the internet and handles errors                                |
-| `ListView.builder`          | Builds scrollable lists dynamically                                              |
-| `Card`                      | Displays each place as a styled card                                             |
-| `ListTile`                  | Displays place information inside a card with leading image, title, and subtitle |
-| `InkWell`                   | Detects taps on the list items for navigation                                    |
-| `Navigator`                 | Handles navigation between Home Screen and Detail Screen                         |
-| `FocusManager`              | Unfocuses the search field when tapping outside                                  |
-| `CircularProgressIndicator` | Shows loading spinner while fetching data                                        |
+| Widget Name      | Purpose                                            |
+| ---------------- | -------------------------------------------------- |
+| `TextField`      | Input fields                                       |
+| `ElevatedButton` | Register and Logout buttons                        |
+| `TextButton`     | Logout button                                      |
+| `Card`           | Decorate ListTile                                  |
+| `ListTile`       | Input fields                                       |
+| `Stack`          | Stack widgets                                      |
+| `Positioned`     | Position widgets inside stack freely               |
+| `Expanded`       | Take up all available space from parent widget     |
+| `PageView`       | Smooth transition between Login and Register views |
+| `PopScope`       | Disables/Changes mobile device back button logic   |
 
 ## Authorship Note
 
