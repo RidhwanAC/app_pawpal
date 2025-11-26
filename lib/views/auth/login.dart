@@ -271,6 +271,12 @@ class _LoginViewState extends State<LoginView> {
           });
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
+          if (!isChecked) {
+            emailController.clear();
+            passwordController.clear();
+          }
+
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Login Successful'),
             backgroundColor: Colors.green,
