@@ -76,3 +76,6 @@ PawPal is a Flutter-based mobile application as a platform for pet adoption and 
 ## Link to GitHub Repository
 
 https://github.com/RidhwanAC/app_pawpal
+
+## Link to YouTube Demo
+https://youtu.be/sgcIMvV97is
